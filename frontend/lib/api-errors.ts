@@ -6,7 +6,6 @@ const CHAT_ERROR =
   "We couldn't answer that question. Try rephrasing it or ask something simpler.";
 const SIGN_IN_REQUIRED = "Please sign in to continue.";
 
-/** API messages that are already plain English and safe to show. */
 const ALLOWED_API_ERRORS = new Set([
   "Email is required.",
   "Enter a valid email address.",
@@ -62,9 +61,6 @@ function looksLikeChatBackendError(message: string): boolean {
   );
 }
 
-/**
- * Turn any raw error string into plain English, or return undefined to use a caller fallback.
- */
 export function plainEnglishMessage(message: string): string | undefined {
   const trimmed = message.trim();
   if (!trimmed) return undefined;
@@ -108,9 +104,6 @@ export function plainEnglishMessage(message: string): string | undefined {
   return undefined;
 }
 
-/**
- * Map API error payloads to user-safe copy. Never surface stack traces, env vars, or SQL.
- */
 export function userFacingApiError(
   status: number,
   bodyError: unknown,
@@ -132,7 +125,6 @@ export function userFacingApiError(
   return fallback;
 }
 
-/** Use in catch blocks when displaying Error.message in the UI. */
 export function userFacingError(err: unknown, fallback: string): string {
   if (err instanceof Error && err.message.trim()) {
     const mapped = plainEnglishMessage(err.message);

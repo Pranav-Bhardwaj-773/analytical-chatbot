@@ -17,7 +17,6 @@ export type IssueEmailVerificationResult = {
   emailSent: boolean;
 };
 
-/** Creates a token, sends (or logs) the verification link, and returns the URL. */
 export async function issueEmailVerification(
   email: string,
   request?: Request,
@@ -35,7 +34,6 @@ export async function issueEmailVerification(
   return { verifyUrl, emailSent: delivery.delivered };
 }
 
-/** @deprecated Use issueEmailVerification */
 export async function createAndSendVerificationEmail(
   email: string,
   request?: Request,

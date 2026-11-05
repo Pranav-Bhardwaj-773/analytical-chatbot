@@ -1,5 +1,3 @@
-"""Run migrations then seed (CLI entrypoint)."""
-
 import argparse
 import json
 import logging

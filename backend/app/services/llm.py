@@ -8,7 +8,6 @@ from app.services.schema_catalog import catalog_prompt_text
 
 _FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.IGNORECASE)
 
-# New Google AI Studio keys cannot use retired 2.x flash IDs (404 for "new users").
 DEFAULT_MODEL_FALLBACKS = (
     "gemini-3.1-flash-lite",
     "gemini-3.5-flash-lite",
@@ -18,8 +17,6 @@ DEFAULT_MODEL_FALLBACKS = (
 
 
 class GeminiApiError(RuntimeError):
-    """Gemini HTTP/API failure with a user-safe explanation."""
-
     def __init__(self, message: str, *, status_code: int | None = None) -> None:
         super().__init__(message)
         self.status_code = status_code
@@ -134,7 +131,6 @@ If the question cannot be answered from this database, reply:
             return _call_gemini(model, prompt)
         except GeminiApiError as exc:
             last_error = exc
-            # Retry on wrong model or temporary overload only
             if exc.status_code in (404, 503):
                 continue
             raise
@@ -150,11 +146,9 @@ def generate_query_plan_retry(
     failed_sql: str,
     db_error: str,
 ) -> dict:
-    """Ask Gemini to fix SQL after Postgres rejected the first attempt."""
     if not settings.gemini_api_key:
         raise GeminiApiError("GEMINI_API_KEY is missing in backend/.env")
 
-    # Keep error text short for the model
     error_snippet = db_error.strip()
     if len(error_snippet) > 800:
         error_snippet = error_snippet[:800] + "..."

@@ -1,6 +1,3 @@
--- Auth.js tables (prefixed auth_* in public; separate from school analytics tables).
--- Run once: npm run db:auth
-
 CREATE TABLE IF NOT EXISTS "auth_users" (
     "id" TEXT NOT NULL,
     "name" TEXT,

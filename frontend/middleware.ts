@@ -38,7 +38,6 @@ export default auth((req) => {
     return NextResponse.redirect(login);
   }
 
-  // Allow /reset-password even when signed in (email link may open in an active session).
   if (isLoggedIn && isGuestOnlyPage) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }

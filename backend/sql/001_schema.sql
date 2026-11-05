@@ -1,6 +1,3 @@
--- School management schema (20 tables)
--- Safe re-run: drops app objects in dependency order
-
 DROP VIEW IF EXISTS v_student_monthly_attendance CASCADE;
 DROP VIEW IF EXISTS v_student_daily_attendance CASCADE;
 DROP VIEW IF EXISTS v_competitive_qualifiers CASCADE;

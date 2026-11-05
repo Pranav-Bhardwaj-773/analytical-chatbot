@@ -19,14 +19,14 @@ import type { DashboardChart } from "@/lib/types";
 import { chartColor } from "@/lib/chart-colors";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const GRID = "oklch(0.68 0.02 264 / 18%)";
-const TICK = "oklch(0.68 0.02 264)";
+const GRID = "var(--border)";
+const TICK = "var(--muted-foreground)";
 
 const TOOLTIP_STYLE = {
   borderRadius: "8px",
-  border: "1px solid oklch(0.68 0.02 264 / 25%)",
-  backgroundColor: "oklch(0.15 0.01 264)",
-  color: "oklch(0.92 0.01 264)",
+  border: "1px solid var(--border)",
+  backgroundColor: "var(--card)",
+  color: "var(--card-foreground)",
   fontSize: "12px",
 };
 
@@ -84,7 +84,7 @@ export function ResultChart({ chart }: { chart: DashboardChart | null }) {
               <CartesianGrid stroke={GRID} strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="name" tick={{ fontSize: 10, fill: TICK }} />
               <YAxis tick={{ fontSize: 10, fill: TICK }} />
-              <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: "oklch(0.68 0.02 264 / 8%)" }} />
+              <Tooltip contentStyle={TOOLTIP_STYLE} cursor={{ fill: "var(--muted)" }} />
               <Bar dataKey="value" radius={[4, 4, 0, 0]} maxBarSize={48}>
                 {data.map((_, index) => (
                   <Cell key={`bar-${index}`} fill={chartColor(index)} />

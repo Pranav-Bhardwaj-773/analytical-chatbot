@@ -2,6 +2,7 @@ import { connection } from "next/server";
 import { BarChart3 } from "lucide-react";
 
 import { auth, signOut } from "@/auth";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 
 export async function AppHeader() {
@@ -26,6 +27,7 @@ export async function AppHeader() {
         <span className="hidden max-w-[180px] truncate text-xs text-muted-foreground md:inline">
           {session.user.email}
         </span>
+        <ThemeToggle />
         <form
           action={async () => {
             "use server";

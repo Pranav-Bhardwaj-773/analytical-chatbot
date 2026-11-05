@@ -9,7 +9,6 @@ from app.routers import analytics, health, chat
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
-    # Phase 1: no auto-migrate on startup (run setup_db manually)
     yield
 
 

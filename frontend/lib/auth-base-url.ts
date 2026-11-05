@@ -1,4 +1,3 @@
-/** Public origin for auth links (verification, callbacks). */
 export function resolveAuthBaseUrl(request?: Request): string {
   const configured = (process.env.AUTH_URL ?? process.env.NEXTAUTH_URL)?.replace(/\/$/, "");
 

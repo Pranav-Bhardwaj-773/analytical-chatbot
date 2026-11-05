@@ -51,11 +51,10 @@ DEFAULT_LIMIT = 500
 
 
 class SqlValidationError(ValueError):
-    """Raised when SQL is not a safe read-only query."""
+    pass
 
 
 def validate_select_sql(sql: str, *, limit: int = DEFAULT_LIMIT) -> str:
-    """Return a single safe SELECT, with LIMIT applied when missing."""
     raw = (sql or "").strip()
     if not raw:
         raise SqlValidationError("SQL is empty")

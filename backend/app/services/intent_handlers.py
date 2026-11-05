@@ -144,7 +144,6 @@ def _extract_n_from_bottom(question: str) -> int | None:
         return _parse_n(match.group(1))
     if not _BOTTOM.search(question):
         return None
-    # "fifth student from bottom" with word before bottom
     loose = re.search(
         r"\b(\d+|fifth|fourth|third|second|first|five|four|three|two|one)\b",
         question,
@@ -164,7 +163,6 @@ def _class_filter(question: str) -> tuple[str, dict[str, object]]:
 
 
 def plan_to_validated_sql(plan: DeterministicPlan) -> str:
-    """Build a literal SQL string safe for validate_select_sql (params are allowlisted)."""
     mode = plan.params.get("mode")
     if mode == "top_n_per_year":
         n = int(plan.params["top_n"])

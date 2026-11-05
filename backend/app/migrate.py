@@ -1,5 +1,3 @@
-"""Apply SQL migrations (schema, views, readonly role)."""
-
 import logging
 
 from app.database import run_migrations

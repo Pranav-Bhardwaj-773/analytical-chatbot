@@ -1,0 +1,23 @@
+[
+  "tests/test_dashboard.py::test_ranking_table_skips_chart",
+  "tests/test_dashboard.py::test_time_series_answer_text",
+  "tests/test_dashboard.py::test_time_series_builds_line_chart",
+  "tests/test_dashboard.py::test_year_metric_series_gets_line_chart",
+  "tests/test_query_normalize.py::test_deterministic_fifth_from_bottom",
+  "tests/test_query_normalize.py::test_deterministic_pass_fail_pie",
+  "tests/test_query_normalize.py::test_deterministic_progress_over_time",
+  "tests/test_query_normalize.py::test_deterministic_top_n_per_year",
+  "tests/test_query_normalize.py::test_deterministic_topper_plan",
+  "tests/test_query_normalize.py::test_extract_year_label",
+  "tests/test_query_normalize.py::test_monthly_attendance_trend_uses_default_year",
+  "tests/test_query_normalize.py::test_normalize_academic_years_in_question",
+  "tests/test_query_normalize.py::test_normalize_question_maps_session",
+  "tests/test_query_normalize.py::test_normalize_sql_year_literals",
+  "tests/test_sql_validator.py::test_attendance_views_are_allowed",
+  "tests/test_sql_validator.py::test_delete_is_rejected",
+  "tests/test_sql_validator.py::test_existing_limit_is_kept",
+  "tests/test_sql_validator.py::test_select_on_view_is_allowed",
+  "tests/test_sql_validator.py::test_two_statements_are_rejected",
+  "tests/test_sql_validator.py::test_unknown_table_is_rejected",
+  "tests/test_sql_validator.py::test_window_top_n_per_year_sql_is_allowed"
+]

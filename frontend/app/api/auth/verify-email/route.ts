@@ -10,7 +10,6 @@ function loginRedirect(req: Request, params: Record<string, string>) {
   return NextResponse.redirect(loginBase);
 }
 
-/** Legacy email links may still hit this URL; forward to the verify page without consuming the token. */
 export async function GET(req: Request) {
   const token = new URL(req.url).searchParams.get("token");
   if (!token?.trim()) {

@@ -1,6 +1,5 @@
 import re
 
-# Academic years in the seeded database (short form only).
 ALLOWED_YEAR_LABELS = frozenset(
     {
         "2015-16",
@@ -24,8 +23,6 @@ def short_year_label(start_year: str, end_year: str) -> str:
 
 
 def normalize_academic_years(text: str) -> str:
-    """Rewrite 2020-2021 / 2020/2021 to catalog form 2020-21."""
-
     def repl(match: re.Match[str]) -> str:
         return short_year_label(match.group(1), match.group(2))
 
@@ -38,8 +35,6 @@ def normalize_question_text(question: str) -> str:
 
 
 def normalize_sql_year_literals(sql: str) -> str:
-    """Fix year_label string literals in generated SQL."""
-
     def repl(match: re.Match[str]) -> str:
         label = short_year_label(match.group(1), match.group(2))
         return f"'{label}'"

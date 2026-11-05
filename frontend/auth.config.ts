@@ -1,9 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
 
-/**
- * Edge-safe Auth.js config (no Prisma, bcrypt, or providers).
- * Used by middleware and extended in auth.ts for Node routes.
- */
 export const authConfig = {
   trustHost: true,
   session: { strategy: "jwt" },

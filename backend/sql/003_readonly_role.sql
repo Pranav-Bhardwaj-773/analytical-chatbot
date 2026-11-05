@@ -1,6 +1,3 @@
--- Read-only role for Text-to-SQL / chatbot runtime.
--- Password placeholder __CHATBOT_READONLY_PASSWORD__ is replaced by migrate script from env.
-
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'chatbot_readonly') THEN

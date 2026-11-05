@@ -10,11 +10,9 @@ export function isEmailDeliveryConfigured(): boolean {
   return Boolean(host && user && pass);
 }
 
-/** Plain-English hint for API responses when outbound email is not ready. */
 export const EMAIL_SETUP_USER_MESSAGE =
   "We can't send email right now. Please try again later.";
 
-/** When SMTP is partially configured, return a message for the client. */
 export function getEmailSetupHint(): string | null {
   if (isEmailDeliveryConfigured()) {
     return null;

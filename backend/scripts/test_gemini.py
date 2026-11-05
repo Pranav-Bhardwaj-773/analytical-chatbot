@@ -1,5 +1,3 @@
-"""One-off Gemini connectivity check (does not print API key)."""
-
 import httpx
 
 from app.config import settings
