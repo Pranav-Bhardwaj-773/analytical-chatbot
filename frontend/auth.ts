@@ -4,6 +4,7 @@ import NextAuth, { CredentialsSignin, type NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 
+import { authConfig } from "@/auth.config";
 import { prisma } from "@/lib/prisma";
 
 class EmailNotVerifiedError extends CredentialsSignin {
@@ -57,15 +58,12 @@ if (googleEnabled) {
   providers.unshift(Google);
 }
 
-export const authConfig = {
-  trustHost: true,
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
-  pages: {
-    signIn: "/login",
-  },
   providers,
   callbacks: {
+    ...authConfig.callbacks,
     async signIn({ user, account, profile }) {
       if (account?.provider === "google") {
         const googleProfile = profile as { email_verified?: boolean } | undefined;
@@ -82,19 +80,5 @@ export const authConfig = {
       }
       return true;
     },
-    async jwt({ token, user }) {
-      if (user?.id) {
-        token.sub = user.id;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user && token.sub) {
-        session.user.id = token.sub;
-      }
-      return session;
-    },
   },
-} satisfies NextAuthConfig;
-
-export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);
+});
