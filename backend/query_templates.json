@@ -1,0 +1,28 @@
+{
+  "templates": [
+    {
+      "id": "progress_line_all_years",
+      "chart": "line",
+      "title": "Average student progress over time",
+      "description": "Average exam percentage by academic year from school start to present."
+    },
+    {
+      "id": "pass_fail_pie_by_year",
+      "chart": "pie",
+      "title": "Pass vs Fail — {year_label}",
+      "description": "Count of Pass and Fail outcomes for one session/year."
+    },
+    {
+      "id": "top_n_per_year",
+      "chart": "table",
+      "title": "Top {n} students per academic year",
+      "description": "Highest exam percentages per year."
+    },
+    {
+      "id": "topper_single_year",
+      "chart": "none",
+      "title": "Topper of {year_label}",
+      "description": "Single highest percentage for a year."
+    }
+  ]
+}

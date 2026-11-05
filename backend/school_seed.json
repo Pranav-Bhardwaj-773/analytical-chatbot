@@ -1,0 +1,120 @@
+{
+  "school": {
+    "school_name": "Greenwood International School",
+    "address": "12 Knowledge Park, Sector 5, New Delhi, India"
+  },
+  "blocks": [
+    { "key": "A", "block_name": "A Block", "block_type": "Senior Academic" },
+    { "key": "B", "block_name": "B Block", "block_type": "Junior Academic" },
+    { "key": "C", "block_name": "C Block", "block_type": "Residential & Labs" },
+    { "key": "D", "block_name": "D Block", "block_type": "Sports & Arts" }
+  ],
+  "facilities": [
+    { "block_key": "A", "facility_name": "Physics Lab", "facility_type": "Science Lab", "capacity": 40 },
+    { "block_key": "A", "facility_name": "Chemistry Lab", "facility_type": "Science Lab", "capacity": 40 },
+    { "block_key": "A", "facility_name": "Senior Library", "facility_type": "Library", "capacity": 120 },
+    { "block_key": "B", "facility_name": "Junior Computer Lab", "facility_type": "Computer Lab", "capacity": 35 },
+    { "block_key": "B", "facility_name": "Mathematics Resource Room", "facility_type": "Classroom", "capacity": 30 },
+    { "block_key": "C", "facility_name": "Biology Lab", "facility_type": "Science Lab", "capacity": 36 },
+    { "block_key": "C", "facility_name": "Advanced Computer Lab", "facility_type": "Computer Lab", "capacity": 45 },
+    { "block_key": "C", "facility_name": "Indoor Games Hall", "facility_type": "Indoor Games", "capacity": 80 },
+    { "block_key": "D", "facility_name": "Main Gymnasium", "facility_type": "Gym", "capacity": 150 },
+    { "block_key": "D", "facility_name": "Swimming Pool Complex", "facility_type": "Sports Facility", "capacity": 60 },
+    { "block_key": "D", "facility_name": "Cricket Ground Pavilion", "facility_type": "Sports Facility", "capacity": 200 },
+    { "block_key": "D", "facility_name": "Music & Arts Studio", "facility_type": "Arts", "capacity": 50 }
+  ],
+  "academic_years": [
+    { "year_label": "2015-16", "start_date": "2015-04-01", "end_date": "2016-03-31" },
+    { "year_label": "2016-17", "start_date": "2016-04-01", "end_date": "2017-03-31" },
+    { "year_label": "2017-18", "start_date": "2017-04-01", "end_date": "2018-03-31" },
+    { "year_label": "2018-19", "start_date": "2018-04-01", "end_date": "2019-03-31" },
+    { "year_label": "2019-20", "start_date": "2019-04-01", "end_date": "2020-03-31" },
+    { "year_label": "2020-21", "start_date": "2020-04-01", "end_date": "2021-03-31" },
+    { "year_label": "2021-22", "start_date": "2021-04-01", "end_date": "2022-03-31" },
+    { "year_label": "2022-23", "start_date": "2022-04-01", "end_date": "2023-03-31" },
+    { "year_label": "2023-24", "start_date": "2023-04-01", "end_date": "2024-03-31" },
+    { "year_label": "2024-25", "start_date": "2024-04-01", "end_date": "2025-03-31" }
+  ],
+  "classes": [
+    "Class 6",
+    "Class 7",
+    "Class 8",
+    "Class 9",
+    "Class 10",
+    "Class 11",
+    "Class 12"
+  ],
+  "sections_per_class": ["A", "B", "C"],
+  "houses": [
+    "Red House",
+    "Blue House",
+    "Green House",
+    "Yellow House"
+  ],
+  "subjects": [
+    "English",
+    "Mathematics",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "Computer Science",
+    "History",
+    "Physical Education"
+  ],
+  "sports": [
+    "Cricket",
+    "Football",
+    "Basketball",
+    "Swimming",
+    "Athletics",
+    "Badminton",
+    "Table Tennis"
+  ],
+  "competitive_exams": [
+    { "exam_name": "NTSE Stage I", "exam_category": "Scholarship" },
+    { "exam_name": "JNV Entrance", "exam_category": "Entrance" },
+    { "exam_name": "IMO Regional", "exam_category": "Olympiad" },
+    { "exam_name": "National Science Olympiad", "exam_category": "Olympiad" },
+    { "exam_name": "CUET Mock", "exam_category": "Entrance" }
+  ],
+  "sports_event_templates": [
+    { "sport_name": "Cricket", "event_name": "Inter-House Cricket Cup", "competition_level": "School" },
+    { "sport_name": "Cricket", "event_name": "District Cricket Championship", "competition_level": "District" },
+    { "sport_name": "Cricket", "event_name": "National School Cricket", "competition_level": "National" },
+    { "sport_name": "Football", "event_name": "Annual Football League", "competition_level": "School" },
+    { "sport_name": "Football", "event_name": "State Football Qualifiers", "competition_level": "State" },
+    { "sport_name": "Basketball", "event_name": "Basketball Invitational", "competition_level": "School" },
+    { "sport_name": "Swimming", "event_name": "Swimming Gala", "competition_level": "School" },
+    { "sport_name": "Swimming", "event_name": "National Aquatics Meet", "competition_level": "National" },
+    { "sport_name": "Athletics", "event_name": "Track & Field Day", "competition_level": "School" },
+    { "sport_name": "Athletics", "event_name": "National Athletics Trials", "competition_level": "National" },
+    { "sport_name": "Badminton", "event_name": "Badminton Open", "competition_level": "District" },
+    { "sport_name": "Table Tennis", "event_name": "Indoor Games Table Tennis", "competition_level": "School" }
+  ],
+  "student_generation": {
+    "count": 140,
+    "admission_start_year": 2015,
+    "first_names_male": [
+      "Arjun", "Rahul", "Vikram", "Aditya", "Rohan", "Karan", "Amit", "Dev", "Nikhil", "Sanjay",
+      "Varun", "Harsh", "Yash", "Kabir", "Manish", "Pranav", "Ritesh", "Siddharth", "Tarun", "Vivek"
+    ],
+    "first_names_female": [
+      "Ananya", "Priya", "Sneha", "Kavya", "Isha", "Neha", "Pooja", "Riya", "Shreya", "Tanvi",
+      "Aisha", "Divya", "Meera", "Nandini", "Simran", "Aditi", "Bhavna", "Charu", "Deepa", "Esha"
+    ],
+    "last_names": [
+      "Sharma", "Patel", "Singh", "Gupta", "Reddy", "Iyer", "Mehta", "Khan", "Das", "Nair",
+      "Joshi", "Malhotra", "Chopra", "Verma", "Bose", "Kapoor", "Rao", "Desai", "Pillai", "Saxena"
+    ]
+  },
+  "fee_options": {
+    "session_fee_amount": 48000,
+    "monthly_fee_amount": 4500
+  },
+  "seed_options": {
+    "random_seed": 42,
+    "pass_rate": 0.88,
+    "national_qualifier_rate": 0.06,
+    "competitive_qualified_rate": 0.12
+  }
+}
