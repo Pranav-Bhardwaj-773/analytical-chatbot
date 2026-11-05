@@ -146,7 +146,7 @@ export function logApiError(scope: string, err: unknown): void {
 }
 
 export function internalServerErrorResponse() {
-  return { error: GENERIC_SERVER_ERROR as const };
+  return { error: GENERIC_SERVER_ERROR };
 }
 
 export const userMessages = {

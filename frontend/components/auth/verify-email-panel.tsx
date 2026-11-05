@@ -127,8 +127,12 @@ export function VerifyEmailPanel() {
             <code className="text-xs">frontend/.env.local</code> and restart{" "}
             <code className="text-xs">npm run dev</code>. For now, click:
           </p>
-          <Button asChild className="mt-3 w-full sm:w-auto" size="sm">
-            <a href={devVerifyUrl}>Verify my email</a>
+          <Button
+            render={<a href={devVerifyUrl} />}
+            className="mt-3 w-full sm:w-auto"
+            size="sm"
+          >
+            Verify my email
           </Button>
           <p className="mt-2 break-all text-xs text-muted-foreground">{devVerifyUrl}</p>
         </div>

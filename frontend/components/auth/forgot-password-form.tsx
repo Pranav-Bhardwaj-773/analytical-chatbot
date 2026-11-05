@@ -70,8 +70,12 @@ export function ForgotPasswordForm() {
       {devResetUrl && (
         <div className="rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-sm">
           <p className="font-medium">Development reset link</p>
-          <Button asChild className="mt-2 w-full sm:w-auto" size="sm">
-            <a href={devResetUrl}>Open reset password page</a>
+          <Button
+            render={<a href={devResetUrl} />}
+            className="mt-2 w-full sm:w-auto"
+            size="sm"
+          >
+            Open reset password page
           </Button>
           <p className="mt-2 break-all text-xs text-muted-foreground">{devResetUrl}</p>
         </div>
