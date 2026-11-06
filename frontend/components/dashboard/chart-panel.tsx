@@ -172,6 +172,8 @@ export function ChatPanel({ className }: ChatPanelProps) {
               variant="outline"
               size="sm"
               onClick={() => setShowInsightsMobile((v) => !v)}
+              aria-expanded={showInsightsMobile}
+              aria-controls="insights-panel"
             >
               <PanelRightOpen className="size-4" />
               {showInsightsMobile ? "Hide insights" : "Show charts & KPIs"}
@@ -181,11 +183,12 @@ export function ChatPanel({ className }: ChatPanelProps) {
       </section>
 
       <aside
+        id="insights-panel"
         className={cn(
-          "insights-panel flex min-h-0 flex-col border-t lg:border-t-0 lg:border-l",
-          showInsightsMobile || latestDashboard || loading
-            ? "flex max-h-[45vh] lg:max-h-none"
-            : "hidden lg:flex",
+          "insights-panel flex min-h-0 flex-col overflow-hidden border-t transition-[max-height,opacity] duration-300 ease-in-out motion-reduce:transition-none lg:overflow-visible lg:opacity-100 lg:transition-none",
+          showInsightsMobile
+            ? "max-h-[45vh] opacity-100 lg:max-h-none"
+            : "pointer-events-none max-h-0 opacity-0 lg:pointer-events-auto lg:max-h-none",
         )}
       >
         <div className="flex shrink-0 items-center gap-2 border-b border-border px-4 py-3">
