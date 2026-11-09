@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { formatDisplayNumber } from "@/lib/format-number";
 import type { DashboardTable } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -38,7 +39,9 @@ export function ResultTable({ table }: { table: DashboardTable }) {
               <TableRow key={i} className={i % 2 === 1 ? "bg-muted/20" : undefined}>
                 {table.columns.map((col) => (
                   <TableCell key={col} className="text-xs tabular-nums">
-                    {String(row[col] ?? "")}
+                    {typeof row[col] === "number"
+                      ? formatDisplayNumber(row[col])
+                      : String(row[col] ?? "")}
                   </TableCell>
                 ))}
               </TableRow>

@@ -27,14 +27,21 @@
     "Daily attendance is v_student_daily_attendance. status is exactly Present, Absent, or Late.",
     "Monthly attendance is v_student_monthly_attendance, rolled up from daily rows. attendance_month is the first day of that month.",
     "attendance_percentage counts Present and Late as attended days. Absent is not attended.",
-    "Monthly attendance trend: AVG(attendance_percentage) GROUP BY attendance_month ORDER BY attendance_month on v_student_monthly_attendance for one year_label; chart line."
+    "Monthly attendance trend: AVG(attendance_percentage) GROUP BY attendance_month ORDER BY attendance_month on v_student_monthly_attendance for one year_label; chart line.",
+    "Sports: use view v_sports_activity. One row per student per sports event.",
+    "How many students play sports or sports participation headcount: COUNT(DISTINCT student_name) on v_sports_activity for the year_label — never use COUNT(*) alone for that question.",
+    "Participation records or entries per sport: COUNT(*) GROUP BY sport_name on v_sports_activity.",
+    "Top N sports by participation: GROUP BY sport_name, order by COUNT(*) DESC, LIMIT N.",
+    "Sports vs non-sports students: COUNT(DISTINCT) active enrollments (v_student_enrollment, enrollment_status ACTIVE) who appear in v_sports_activity vs those who do not for the same year_label.",
+    "Pass vs fail among sports participants only: restrict to DISTINCT student_name from v_sports_activity for the year, join v_exam_outcomes on student_name and year_label, then COUNT by final_status — not whole-school pass/fail.",
+    "Do not answer sports count questions with total active enrollment unless the user asks for all enrolled students."
   ],
   "views": {
     "v_student_enrollment": "student_id, student_name, gender, enrollment_status, year_label, class_name, section_name, block_name, block_type, school_name",
     "v_block_facilities": "block_name, facility_name, facility_type, capacity",
     "v_exam_outcomes": "student_name, exam_name, year_label, class_name, total_marks, percentage, final_status, rank",
     "v_subject_marks": "student_name, subject_name, marks_obtained, maximum_marks, year_label, class_name, exam_name",
-    "v_sports_activity": "student_name, sport_name, event_name, year_label, competition_level, qualification_level, medal, position",
+    "v_sports_activity": "participation_id, student_id, student_name, sport_name, event_name, year_label, competition_level, qualification_level, medal, position",
     "v_house_roster": "student_name, house_name, year_label",
     "v_competitive_qualifiers": "student_name, exam_name, exam_category, year_label, qualification_status, rank, score",
     "v_student_session_fees": "student_name, gender, year_label, fee_amount, paid_amount, dues_amount, payment_status",

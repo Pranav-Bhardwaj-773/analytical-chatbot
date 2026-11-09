@@ -98,17 +98,69 @@ def _call_gemini(model: str, prompt: str) -> dict:
     return plan
 
 
-def generate_query_plan(question: str) -> dict:
+def _format_conversation_block(
+    history: list[dict] | None,
+    *,
+    last_sql: str | None = None,
+) -> str:
+    if not history and not last_sql:
+        return ""
+
+    parts: list[str] = []
+    if history:
+        lines = []
+        for turn in history[-10:]:
+            role = str(turn.get("role") or "user").strip().lower()
+            label = "User" if role == "user" else "Assistant"
+            content = str(turn.get("content") or "").strip()
+            if not content:
+                continue
+            if len(content) > 1200:
+                content = content[:1200] + "..."
+            lines.append(f"{label}: {content}")
+        if lines:
+            parts.append("Recent conversation:\n" + "\n".join(lines))
+
+    if last_sql and last_sql.strip():
+        sql_snippet = last_sql.strip()
+        if len(sql_snippet) > 1500:
+            sql_snippet = sql_snippet[:1500] + "..."
+        parts.append(f"SQL from the previous answer (for follow-ups like filters or chart changes):\n{sql_snippet}")
+
+    if not parts:
+        return ""
+    return "\n\n".join(parts) + "\n\n"
+
+
+def generate_query_plan(
+    question: str,
+    *,
+    history: list[dict] | None = None,
+    last_sql: str | None = None,
+) -> dict:
     if not settings.gemini_api_key:
         raise GeminiApiError("GEMINI_API_KEY is missing in backend/.env")
+
+    context_block = _format_conversation_block(history, last_sql=last_sql)
 
     prompt = f"""
 You write PostgreSQL for a school analytics database.
 Schema catalog:
 {catalog_prompt_text()}
 
-User question:
+{context_block}Current user question:
 {question}
+
+Follow-up rules:
+- If the current question refers to "that", "same", "previous", or changes chart type or year, use the conversation and prior SQL.
+- Write a standalone SQL query for the current question; do not assume the user still sees old results.
+- If the user challenges a number (e.g. how are you counting 420), explain with COUNT(DISTINCT student_name) vs COUNT(*) on v_sports_activity — do not switch to total enrollment.
+
+Sports rules:
+- v_sports_activity is one row per student per event.
+- "How many students in sports" requires COUNT(DISTINCT student_name), not COUNT(*).
+- Pass/fail for sports participants: filter students who appear in v_sports_activity for that year before counting final_status.
+- Sports vs all students: compare DISTINCT sports participants to ACTIVE enrollments without sports rows.
 
 Additional rules:
 - Never use year_label values outside the catalog list (short form only, e.g. 2020-21).

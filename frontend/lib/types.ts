@@ -1,5 +1,12 @@
-export type ChatRequest = {
+export type ChatTurn = {
+    role: "user" | "assistant";
+    content: string;
+  };
+
+  export type ChatRequest = {
     message: string;
+    history?: ChatTurn[];
+    last_sql?: string | null;
   };
   
   export type DashboardKpi = {

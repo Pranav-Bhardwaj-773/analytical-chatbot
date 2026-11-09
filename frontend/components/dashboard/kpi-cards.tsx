@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { DashboardKpi } from "@/lib/types";
+import { formatDisplayNumber } from "@/lib/format-number";
 import { cn } from "@/lib/utils";
 
 const KPI_VALUE_COLORS = [
@@ -31,7 +32,11 @@ export function KpiCards({ kpis }: { kpis: DashboardKpi[] }) {
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-1">
-              <p className={cn("text-xl font-bold tabular-nums", valueColor)}>{kpi.value}</p>
+              <p className={cn("text-xl font-bold tabular-nums", valueColor)}>
+                {typeof kpi.value === "number"
+                  ? formatDisplayNumber(kpi.value)
+                  : kpi.value}
+              </p>
             </CardContent>
           </Card>
         );

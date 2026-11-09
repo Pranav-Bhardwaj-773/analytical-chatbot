@@ -94,6 +94,8 @@ _PASS_FAIL = re.compile(
     r"\bpass\b.*\bfail\b|\bfail\b.*\bpass\b",
     re.IGNORECASE,
 )
+_SPORTS = re.compile(r"\bsports?\b", re.IGNORECASE)
+_PARTICIPATE = re.compile(r"\bparticipat", re.IGNORECASE)
 
 
 def _match_progress_over_time(question: str) -> bool:
@@ -107,8 +109,78 @@ def _match_progress_over_time(question: str) -> bool:
     )
 
 
+def _match_sports_scoped(question: str) -> bool:
+    lower = question.lower()
+    if "sports participant" in lower:
+        return True
+    if re.search(r"\bsports\s+participants?\b", lower):
+        return True
+    if re.search(r"\bfrom\s+the\s+sports\b", lower):
+        return True
+    if _SPORTS.search(question) and _PARTICIPATE.search(question):
+        return True
+    return False
+
+
+def _match_pass_fail_sports(question: str) -> bool:
+    if _match_sports_scoped(question) and re.search(
+        r"\bpass|\bfail|\bpassed\b",
+        question,
+        re.IGNORECASE,
+    ):
+        return True
+    return bool(_PASS_FAIL.search(question) and _match_sports_scoped(question))
+
+
 def _match_pass_fail_pie(question: str) -> bool:
-    return bool(_PASS_FAIL.search(question))
+    if not _PASS_FAIL.search(question):
+        return False
+    if _match_sports_scoped(question):
+        return False
+    return True
+
+
+def _resolve_year(question: str) -> str:
+    year = extract_year_label(question)
+    if year and year in ALLOWED_YEAR_LABELS:
+        return year
+    if _THIS_YEAR.search(question):
+        return _DEFAULT_YEAR
+    return _DEFAULT_YEAR
+
+
+def _match_top_sports_by_participation(question: str) -> int | None:
+    if not _SPORTS.search(question):
+        return None
+    if re.search(r"\bby\s+particip|\btop\b.*\bsport", question, re.IGNORECASE):
+        match = _TOP_N.search(question)
+        if match:
+            n = _parse_n(match.group(1))
+            return n or 5
+        loose = re.search(r"\btop\s+(\d+)\b", question, re.IGNORECASE)
+        if loose:
+            return int(loose.group(1))
+        return 5
+    return None
+
+
+def _match_sports_vs_all_students(question: str) -> bool:
+    if not (_SPORTS.search(question) or _PARTICIPATE.search(question)):
+        return False
+    lower = question.lower()
+    return bool(
+        re.search(r"\bevery\s+student", lower)
+        or re.search(r"\bnon[- ]?particip", lower)
+        or re.search(r"\bparticipat.*\bvs\b", lower)
+        or re.search(r"\ball\s+students?\b.*\bsport", lower)
+        or re.search(r"\bsport.*\bevery\b", lower)
+    )
+
+
+def _match_unique_sports_students(question: str) -> bool:
+    if not re.search(r"\bhow\s+many\s+(?:unique\s+)?students?\b", question, re.IGNORECASE):
+        return False
+    return bool(_SPORTS.search(question) or _PARTICIPATE.search(question))
 
 
 def _top_n_per_all_years(question: str) -> int | None:
@@ -215,6 +287,88 @@ def plan_to_validated_sql(plan: DeterministicPlan) -> str:
             ORDER BY final_status
         """.strip()
 
+    if mode == "pass_fail_sports_participants":
+        year = str(plan.params["year_label"])
+        if year not in ALLOWED_YEAR_LABELS:
+            raise ValueError("year_label not allowed")
+        return f"""
+            WITH participants AS (
+              SELECT DISTINCT student_name
+              FROM v_sports_activity
+              WHERE year_label = '{year}'
+            ),
+            outcomes AS (
+              SELECT DISTINCT ON (student_name)
+                     student_name, final_status
+              FROM v_exam_outcomes
+              WHERE year_label = '{year}'
+              ORDER BY student_name, percentage DESC
+            )
+            SELECT o.final_status AS label, COUNT(*) AS value
+            FROM participants p
+            JOIN outcomes o ON o.student_name = p.student_name
+            GROUP BY o.final_status
+            ORDER BY o.final_status
+        """.strip()
+
+    if mode == "top_sports_participation":
+        year = str(plan.params["year_label"])
+        n = int(plan.params["top_n"])
+        if year not in ALLOWED_YEAR_LABELS:
+            raise ValueError("year_label not allowed")
+        if n < 1 or n > 20:
+            raise ValueError("top_n out of range")
+        return f"""
+            SELECT sport_name,
+                   COUNT(*) AS participation_count,
+                   COUNT(DISTINCT student_name) AS unique_students
+            FROM v_sports_activity
+            WHERE year_label = '{year}'
+            GROUP BY sport_name
+            ORDER BY participation_count DESC
+            LIMIT {n}
+        """.strip()
+
+    if mode == "sports_enrollment_split":
+        year = str(plan.params["year_label"])
+        if year not in ALLOWED_YEAR_LABELS:
+            raise ValueError("year_label not allowed")
+        return f"""
+            SELECT label, value
+            FROM (
+              SELECT 1 AS ord,
+                     'Participated in sports' AS label,
+                     COUNT(DISTINCT sa.student_name) AS value
+              FROM v_sports_activity sa
+              WHERE sa.year_label = '{year}'
+              UNION ALL
+              SELECT 2,
+                     'No sports participation',
+                     COUNT(DISTINCT e.student_name)
+              FROM v_student_enrollment e
+              WHERE e.year_label = '{year}'
+                AND e.enrollment_status = 'ACTIVE'
+                AND NOT EXISTS (
+                  SELECT 1 FROM v_sports_activity sa
+                  WHERE sa.student_name = e.student_name
+                    AND sa.year_label = '{year}'
+                )
+            ) split
+            ORDER BY ord
+        """.strip()
+
+    if mode == "sports_unique_and_records":
+        year = str(plan.params["year_label"])
+        if year not in ALLOWED_YEAR_LABELS:
+            raise ValueError("year_label not allowed")
+        return f"""
+            SELECT
+                COUNT(DISTINCT student_name) AS unique_students,
+                COUNT(*) AS participation_records
+            FROM v_sports_activity
+            WHERE year_label = '{year}'
+        """.strip()
+
     year = str(plan.params["year_label"])
     if year not in ALLOWED_YEAR_LABELS:
         raise ValueError("year_label not allowed")
@@ -279,6 +433,47 @@ def try_deterministic_plan(question: str) -> DeterministicPlan | None:
             title=f"Top {top_n_all} students per academic year",
             chart="table",
             params={"mode": "top_n_per_year", "top_n": top_n_all},
+        )
+
+    top_sports = _match_top_sports_by_participation(question)
+    if top_sports is not None:
+        year = _resolve_year(question)
+        return DeterministicPlan(
+            sql="",
+            title=f"Top {top_sports} sports by participation ({year})",
+            chart="bar",
+            params={
+                "mode": "top_sports_participation",
+                "year_label": year,
+                "top_n": top_sports,
+            },
+        )
+
+    if _match_pass_fail_sports(question):
+        year = _resolve_year(question)
+        return DeterministicPlan(
+            sql="",
+            title=f"Exam status of sports participants ({year})",
+            chart="pie",
+            params={"mode": "pass_fail_sports_participants", "year_label": year},
+        )
+
+    if _match_sports_vs_all_students(question):
+        year = _resolve_year(question)
+        return DeterministicPlan(
+            sql="",
+            title=f"Sports participation vs non-participation ({year})",
+            chart="pie",
+            params={"mode": "sports_enrollment_split", "year_label": year},
+        )
+
+    if _match_unique_sports_students(question):
+        year = _resolve_year(question)
+        return DeterministicPlan(
+            sql="",
+            title=f"Students in sports ({year})",
+            chart="none",
+            params={"mode": "sports_unique_and_records", "year_label": year},
         )
 
     year = extract_year_label(question)

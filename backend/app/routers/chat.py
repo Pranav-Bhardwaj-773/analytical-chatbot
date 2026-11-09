@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.deps import require_internal_api_key
 from app.schemas.chat import ChatRequest, ChatResponse
+from app.services.chat_followups import try_meta_followup
 from app.services.dashboard import EMPTY_ANSWER_HINT, answer_from_rows, build_dashboard
 from app.services.intent_handlers import plan_to_validated_sql, try_deterministic_plan
 from app.services.llm import (
@@ -151,6 +152,10 @@ def _respond(
 def chat(body: ChatRequest, db: Session = Depends(get_db)) -> ChatResponse:
     question = normalize_question_text(body.message)
 
+    meta = try_meta_followup(db, question, last_sql=body.last_sql)
+    if meta is not None:
+        return meta
+
     deterministic = try_deterministic_plan(question)
     if deterministic:
         try:
@@ -165,8 +170,17 @@ def chat(body: ChatRequest, db: Session = Depends(get_db)) -> ChatResponse:
             chart=deterministic.chart,
         )
 
+    history = (
+        [{"role": t.role, "content": t.content} for t in body.history]
+        if body.history
+        else None
+    )
     try:
-        plan = generate_query_plan(question)
+        plan = generate_query_plan(
+            question,
+            history=history,
+            last_sql=body.last_sql,
+        )
     except GeminiApiError as exc:
         status = 429 if exc.status_code == 429 else 502
         raise HTTPException(status_code=status, detail=str(exc)) from exc
